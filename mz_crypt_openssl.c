@@ -11,6 +11,8 @@
 #include "mz.h"
 #include "mz_crypt.h"
 
+#include <wolfssl/options.h>
+
 #include <openssl/err.h>
 #include <openssl/engine.h>
 #include <openssl/rand.h>
@@ -36,7 +38,7 @@ static void mz_crypt_init(void) {
         ERR_load_crypto_strings();
 
         ENGINE_load_builtin_engines();
-        ENGINE_register_all_complete();
+        // ENGINE_register_all_complete();
 #else
         OPENSSL_init_crypto(OPENSSL_INIT_ENGINE_ALL_BUILTIN, NULL);
 #endif
@@ -502,19 +504,19 @@ typedef struct mz_crypt_hmac_s {
 
 #if (OPENSSL_VERSION_NUMBER < 0x10100000L) || \
     (defined(LIBRESSL_VERSION_NUMBER) && (LIBRESSL_VERSION_NUMBER < 0x2070000fL))
-static HMAC_CTX *HMAC_CTX_new(void) {
-    HMAC_CTX *ctx = OPENSSL_malloc(sizeof(HMAC_CTX));
-    if (ctx)
-        HMAC_CTX_init(ctx);
-    return ctx;
-}
-
-static void HMAC_CTX_free(HMAC_CTX *ctx) {
-    if (ctx) {
-        HMAC_CTX_cleanup(ctx);
-        OPENSSL_free(ctx);
-    }
-}
+// static HMAC_CTX *HMAC_CTX_new(void) {
+//     HMAC_CTX *ctx = OPENSSL_malloc(sizeof(HMAC_CTX));
+//     if (ctx)
+//         HMAC_CTX_init(ctx);
+//     return ctx;
+// }
+//
+// static void HMAC_CTX_free(HMAC_CTX *ctx) {
+//     if (ctx) {
+//         HMAC_CTX_cleanup(ctx);
+//         OPENSSL_free(ctx);
+//     }
+// }
 #endif
 
 /***************************************************************************/
