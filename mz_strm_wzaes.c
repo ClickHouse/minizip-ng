@@ -184,6 +184,9 @@ int32_t mz_stream_wzaes_read(void *stream, void *buf, int32_t size) {
     max_total_in = wzaes->max_total_in - MZ_AES_FOOTER_SIZE;
     if ((int64_t)bytes_to_read > (max_total_in - wzaes->total_in))
         bytes_to_read = (int32_t)(max_total_in - wzaes->total_in);
+    /* Never pass a negative size to the base stream, e.g. if the entry is too short for the footer */
+    if (bytes_to_read <= 0)
+        return 0;
 
     read = mz_stream_read(wzaes->stream.base, buf, bytes_to_read);
 
